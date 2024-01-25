@@ -4,6 +4,7 @@ const cors = require('cors');
 const UserexpModel = require("./models/userexp.js");
 const UserreportModel = require("./models/userreport.js");
 const ProductModel = require("./models/products.js");
+const CartModel = require("./models/cart.js");
 
 const app = express();
 app.use(cors());
@@ -83,7 +84,13 @@ app.get("/getUp/:id", (req, res)=>{
 })
 
 
-// -----------------------------------------Product list--------------------------------------
+// -----------------------------------------Cart details--------------------------------------
+
+app.post("/createCart",(req, res)=>{
+  CartModel.create(req.body)
+  .then(e=>res.json(e))
+  .catch(err=>res.json(err))
+});
 
 app.listen(3002, ()=>{
   console.log("server is running");
