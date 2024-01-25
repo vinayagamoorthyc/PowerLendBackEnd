@@ -91,6 +91,17 @@ app.post("/createCart",(req, res)=>{
   .then(e=>res.json(e))
   .catch(err=>res.json(err))
 });
+app.get("/getCart", (req, res)=>{
+  CartModel.find()
+  .then(e => res.json(e))
+  .catch(err => res.json(err))
+})
+app.delete("/deleteCart/:id", (req, res)=>{
+  const id = req.params.id;
+  CartModel.findByIdAndDelete({_id: id})
+  .then(e=>res.json(e))
+  .catch(err=>res.json(err))
+})
 
 app.listen(3002, ()=>{
   console.log("server is running");
