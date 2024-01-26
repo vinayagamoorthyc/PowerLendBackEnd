@@ -12,7 +12,7 @@ const UserModel = require("./models/users.js");
 
 const app = express();
 app.use(cors({
-  origin: ["http://localhost:3000"],
+  origin: ["https://powertoolsrental.vercel.app"],
   methods: ["GET", "POST"],
   credentials: true
 }));
@@ -20,29 +20,6 @@ app.use(express.json());
 app.use(cookieParser());
 
 mongoose.connect("mongodb+srv://VinayagaMoorthy27:Vinayaga2709@vinayagadb.o991msv.mongodb.net/Mern_Project?retryWrites=true&w=majority");
-
-const verifyUser=(req, res, next)=>{
-  const token = req.cookies.token;
-  if(!token){
-    return res.json("Token missing");
-  }else{
-    jwt.verify(token, "jwt-secret-key", (err, decoded)=>{
-      if(err){
-        return res.json("error with token");
-      }else{
-        if(decoded.role === "admin"){
-          next();
-        }else{
-          return res.json("not an admin");
-        }
-      }
-    })
-  }
-}
-
-app.get('/admin', verifyUser, (req, res)=>{
-  res.json("success");
-})
 
 // -----------------------------------------Experience--------------------------------------
 
