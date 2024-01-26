@@ -13,7 +13,7 @@ const UserModel = require("./models/users.js");
 const app = express();
 app.use(cors({
   origin: ["https://powertoolsrental.vercel.app"],
-  methods: ["GET", "POST"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
 app.use(express.json());
