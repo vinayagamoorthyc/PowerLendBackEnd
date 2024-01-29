@@ -4,8 +4,14 @@ const UserSchema = new mongoose.Schema({
     username: String,
     email: String,
     phone: Number,
-    address: String,
-    orders: Number,
+    address: {
+        type: String,
+        default: "Update your profile to set the delivery address and the address should be valid with pincode!"
+    },
+    orders: {
+        type: Number,
+        default: 0,
+    },
     password: String,
     role: {
         type: String,

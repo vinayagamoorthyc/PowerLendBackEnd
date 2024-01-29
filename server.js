@@ -12,7 +12,6 @@ const UserModel = require("./models/users.js");
 
 const app = express();
 app.use(cors({
-  origin: ["http://localhost:3000"],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
@@ -147,6 +146,20 @@ app.get("/getUser/:id", (req, res)=>{
   UserModel.findById({_id:id})
   .then(e=>res.json(e))
   .catch(err=>console.log(err));
+})
+app.get("/getUpUser/:id", (req, res)=>{
+  const id = req.params.id;
+  UserModel.findById({_id:id})
+  .then(e=>res.json(e))
+  .catch(err=>res.json(err))
+})
+app.put("/updateUser/:id", (req, res)=>{
+  const id = req.params.id;
+  UserModel.findByIdAndUpdate({_id: id}, {username: req.body.username, email: req.body.email, 
+    phone: req.body.phone, address: req.body.address
+  })
+  .then(e=>res.json(e))
+  .catch(err=>res.json(err))
 })
 
 app.listen(3002, ()=>{
