@@ -12,7 +12,6 @@ const UserModel = require("./models/users.js");
 
 const app = express();
 app.use(cors({
-  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
 app.use(express.json());
