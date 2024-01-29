@@ -12,7 +12,7 @@ const UserModel = require("./models/users.js");
 
 const app = express();
 app.use(cors({
-  origin: ["https://powertoolsrental.vercel.app"],
+  origin: ["http://localhost:3000"],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
@@ -112,7 +112,7 @@ app.delete("/deleteCart/:id", (req, res)=>{
   .catch(err=>res.json(err))
 })
 
-// -----------------------------------------Cart details--------------------------------------
+// -----------------------------------------login register--------------------------------------
 
 app.post("/register",(req, res)=>{
   const {username, email, phone, password}=req.body;
@@ -132,8 +132,7 @@ app.post("/login", (req, res)=>{
         if(response){
           const token = jwt.sign({email: user.email, role: user.role},
             "jwt-secret-key", {expiresIn: "1d"});
-            res.cookie('token', token);
-            return res.json({Status: "success", role: user.role});
+            return res.json({Status: "success", role: user.role, id: user._id, tok: token});
         }else{
           return res.json("incorrect password!");
         }
@@ -142,6 +141,12 @@ app.post("/login", (req, res)=>{
       return res.json("no record exist");
     }
   })
+})
+app.get("/getUser/:id", (req, res)=>{
+  const id=req.params.id;
+  UserModel.findById({_id:id})
+  .then(e=>res.json(e))
+  .catch(err=>console.log(err));
 })
 
 app.listen(3002, ()=>{
