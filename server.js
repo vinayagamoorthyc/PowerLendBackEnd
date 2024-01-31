@@ -4,7 +4,6 @@ const cors = require('cors');
 const UserexpModel = require("./models/userexp.js");
 const UserreportModel = require("./models/userreport.js");
 const ProductModel = require("./models/products.js");
-const CartModel = require("./models/cart.js");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const cookieParser = require('cookie-parser');
@@ -95,19 +94,32 @@ app.get("/getUp/:id", (req, res)=>{
 
 // -----------------------------------------Cart details--------------------------------------
 
-app.post("/createCart",(req, res)=>{
-  CartModel.create(req.body)
+app.post("/createCart/:userid",(req, res)=>{
+  const id=req.params.userid;
+  const cartbody = {
+    proname: req.body.proname,
+    prorate: req.body.prorate,
+    days: req.body.days,
+    imgurl: req.body.imgurl
+  };
+  UserModel.findByIdAndUpdate({_id:id}, {
+    $push: {cart: {...cartbody}}
+  })
   .then(e=>res.json(e))
   .catch(err=>res.json(err))
 });
-app.get("/getCart", (req, res)=>{
-  CartModel.find()
-  .then(e => res.json(e))
-  .catch(err => res.json(err))
-})
-app.delete("/deleteCart/:id", (req, res)=>{
+app.get("/getCart/:userid",(req,res)=>{
+  const id = req.params.userid;
+  UserModel.findById({_id:id})
+  .then((e)=>res.json(e.cart))
+  .catch(err=>res.json(err))
+});
+app.post("/deleteCart/:id", (req,res)=>{
   const id = req.params.id;
-  CartModel.findByIdAndDelete({_id: id})
+  const {userid} = req.body;
+  UserModel.findByIdAndUpdate({_id:userid},{
+    $pull: {cart: {_id:id}}
+  })
   .then(e=>res.json(e))
   .catch(err=>res.json(err))
 })

@@ -16,7 +16,13 @@ const UserSchema = new mongoose.Schema({
     role: {
         type: String,
         default: "user"
-    }
+    },
+    cart:[{
+        proname: String,
+        prorate: Number,
+        days: Number,
+        imgurl: String
+    }]
 });
 
 const userModel = mongoose.model("users", UserSchema);
