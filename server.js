@@ -91,7 +91,6 @@ app.get("/getUp/:id", (req, res)=>{
   .catch(err=>res.json(err))
 })
 
-
 // -----------------------------------------Cart details--------------------------------------
 
 app.post("/createCart/:userid",(req, res)=>{
