@@ -174,6 +174,17 @@ app.put("/updateUser/:id", (req, res)=>{
   .then(e=>res.json(e))
   .catch(err=>res.json(err))
 })
+app.get("/getUserDetails", (req, res)=>{
+  UserModel.find().
+  then(e => res.json(e))
+  .catch(err => res.json(err))
+});
+app.delete("/deleteUser/:id", (req,res)=>{
+  const id = req.params.id;
+  UserModel.findByIdAndDelete({_id:id})
+  .then(e=>res.json(e))
+  .catch(err=>res.json(err))
+});
 
 app.listen(3002, ()=>{
   console.log("server is running");
