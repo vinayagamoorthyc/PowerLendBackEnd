@@ -10,11 +10,13 @@ const cookieParser = require('cookie-parser');
 const UserModel = require("./models/users.js");
 
 const app = express();
-app.use(cors({
-  origin: ["https://powertoolsrental.vercel.app"],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use(cookieParser());
 
@@ -153,6 +155,28 @@ app.post("/login", (req, res)=>{
     }
   })
 })
+
+// --- NEW ROUTE: Reset Password ---
+app.put("/reset-password", (req, res) => {
+  const { email, newPassword } = req.body;
+  
+  // 1. Hash the new password
+  bcrypt.hash(newPassword, 10)
+    .then(hash => {
+      // 2. Find the user by email and update their password
+      UserModel.findOneAndUpdate({ email: email }, { password: hash }, { new: true })
+        .then(user => {
+          if (user) {
+            res.json({ Status: "Success" });
+          } else {
+            res.json({ Status: "Not Found" });
+          }
+        })
+        .catch(err => res.json({ Status: "Error", Error: err }));
+    })
+    .catch(err => res.json({ Status: "Error", Error: err }));
+});
+
 app.get("/getUser/:id", (req, res)=>{
   const id=req.params.id;
   UserModel.findById({_id:id})
@@ -183,6 +207,15 @@ app.delete("/deleteUser/:id", (req,res)=>{
   UserModel.findByIdAndDelete({_id:id})
   .then(e=>res.json(e))
   .catch(err=>res.json(err))
+});
+
+app.put("/updateUserRole/:id", (req, res) => {
+  const id = req.params.id;
+  const { role } = req.body;
+  
+  UserModel.findByIdAndUpdate({_id: id}, { role: role }, { new: true })
+  .then(e => res.json(e))
+  .catch(err => res.json(err));
 });
 
 app.listen(3002, ()=>{
